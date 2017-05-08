@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Swagger UI</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+//(function() {
+    var apiAddress = "http://localhost:8080/api/hello";
+
+    var dataToSend = {
+        name: "John"
+    }
+
+    function sendPost(code){
+        $.ajax({
+            url: apiAddress,
+            type: 'post',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            traditional: true,
+            success: function (data) {
+                console.log(data);
+            },
+            data: JSON.stringify({name:code})
+        });
+    }
+//})();
+
+function validateForm() {
+    console.log("Sending request");
+    var code = $("#code").val();
+    console.log(code);
+    var encodedData = window.btoa(code);
+    console.log(encodedData);
+    sendPost(encodedData);
+    return false;
+}
+
+    </script>
+    <style>
+textarea {
+  width:400px;
+  height:400px;
+  border: 2px solid #990000;
+}
+    </style>
+</head>
+<body>
+
+<form id="myform" method="post" onsubmit="return validateForm()">
+<textarea rows="4" cols="50" id="code">
+/**
+ * Hello World, is your first program in Java language.
+ *
+ * @author jabrena
+ */
+public class HelloWorld {
+
+    /**
+     * The Java Virtual Machine starts up by loading a specified class
+     * and then invoking the method main in this specified class.
+     */
+    public static void main(final String[] args) {
+        //Show in the output a text
+        System.out.println("Hello world");
+    }
+
+}
+</textarea>
+    <br/>
+    <input type="submit" />
+</form>
+
+</body>

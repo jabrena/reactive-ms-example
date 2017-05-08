@@ -44,4 +44,22 @@ public class HelloServiceImplTests {
             assertThat(exception, instanceOf(InvalidParametersException.class));
         });
     }
+
+    @Test
+    public void decodeTest(){
+        Mono.just("aGVsbG8gd29ybGQ=")
+                .publish(helloService.decode())
+                .subscribe(s -> assertThat(s, is("hello world")));
+    }
+
+    @Test
+    public void decodeErrorTest(){
+        Mono.just("aGVsbG8gd29ybGQ=1")
+                .publish(helloService.decode())
+                .subscribe(s -> {
+                    throw new RuntimeException("The function should return NullPointerException. Verify the test");
+                },throwable -> {
+                    assertThat(throwable, instanceOf(NullPointerException.class));
+                });
+    }
 }

@@ -4,6 +4,7 @@ import org.learning.by.example.reactive.microservices.model.HelloRequest;
 import org.learning.by.example.reactive.microservices.model.HelloResponse;
 import org.learning.by.example.reactive.microservices.services.HelloService;
 import org.learning.by.example.reactive.microservices.services.QuoteService;
+import org.springframework.web.reactive.function.BodyExtractors;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
@@ -39,8 +40,11 @@ public class ApiHandler {
     }
 
     public Mono<ServerResponse> postHello(final ServerRequest request) {
+
         return request.bodyToMono(HelloRequest.class)
                 .flatMap(helloRequest -> Mono.just(helloRequest.getName()))
+                .publish(helloService.decode())
+                .log()
                 .publish(getServerResponse())
                 .onErrorResume(errorHandler::throwableError);
     }
