@@ -45,6 +45,8 @@ public class ApiHandler {
                 .flatMap(helloRequest -> Mono.just(helloRequest.getName()))
                 .publish(helloService.decode())
                 .log()
+                .publish(helloService.compile())
+                .publish(helloService.run())
                 .publish(getServerResponse())
                 .onErrorResume(errorHandler::throwableError);
     }
@@ -58,8 +60,12 @@ public class ApiHandler {
     Function<Mono<String>, Mono<HelloResponse>> createHelloResponse() {
         return name ->
                 name.publish(helloService.getGreetings()).flatMap(
-                        greetings -> getQuote().flatMap(
+                        greetings -> getQuote2().flatMap(
                                 title -> Mono.just(new HelloResponse(greetings, title))));
+    }
+
+    Mono<String> getQuote2() {
+        return Mono.just("Hello World");
     }
 
     Mono<String> getQuote() {
